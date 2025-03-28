@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Rules - Book Layout</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a1f2c;
+            --accent-color: #dc2626;
+            --gradient-start: #991b1b;
+            --gradient-end: #ef4444;
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #111827 100%);
+            min-height: 100vh;
+            padding: 80px 0 0 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+    
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    
+        .logo a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+    
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            margin-left: auto;
+        }
+    
+        .nav-links li {
+            list-style: none;
+        }
+    
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+    
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-color);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+    
+        .nav-links a:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+    
+        .login-btn {
+            background: var(--accent-color);
+            color: white !important;
+            padding: 0.8rem 2rem !important;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+    
+        .login-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2);
+        }
+    
+        .login-btn::before {
+            display: none !important;
+        }
+
+        /* Book Styles */
+        .scroll-container {
+            flex: 1;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            perspective: 2000px;
+        }
+
+        .scroll {
+            background: var(--bg-color);
+            padding: 4rem;
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform-style: preserve-3d;
+            transform: rotateX(2deg);
+            transition: transform 0.5s ease;
+        }
+
+        .scroll:hover {
+            transform: rotateX('0deg');
+        }
+
+        .rules-title {
+            font-size: 3.5rem;
+            font-size: 3.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .rules-section {
+            background: white;
+            margin-bottom: 3rem;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transform: translateY(30px);
+            opacity: 0;
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        .rules-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--accent-color), transparent);
+        }
+
+        .rules-section:last-child::after {
+            display: none;
+        }
+
+        .rules-section h3 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: none;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .rules-section h3::after{
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .rules-section:hover h3::after {
+            transform: scaleX(1);
+        }
+
+        .rules-list {
+            list-style: none;
+        }
+
+        .rules-list li {
+            background: white;
+            margin: 1rem 0;
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transform: translateX(0);
+        }
+
+        .rules-list li:hover {
+            transform: translateX(10px);
+            border-left: 4px solid var(--accent-color);
+            background: linear-gradient(to right, white, #f8fafc);
+        }
+
+        .rules-list i {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .rules-list li:hover i {
+            transform: scale(1.2);
+        }
+
+        .rules-list ul {
+            list-style: disc;
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 1rem;
+            right: 2rem;
+            font-style: italic;
+            color: var(--accent-color);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .rounds-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .rounds-container h4 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            padding-bottom: 1rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
+            border: none;
+            background: #f8fafc;
+            color: var(--text-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            opacity: 0.7;
+            border-radius: 8px;
+            min-width: 120px;
+            font-size: 1rem;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            opacity: 1;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-color);
+            transform: scaleX(1);
+            transition: transform 0.3s ease;
+        }
+
+        .tab-btn.active::after {
+            transform: scaleX(1);
+        }
+
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 4rem 0 1rem 0;
+            width: 100%;
+            margin-top: auto;
+        }
+    
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            padding: 0 2rem;
+        }
+    
+        .footer-section h3 {
+            color: var(--accent-color);
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+    
+        .footer-section p {
+            margin: 0.8rem 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+
+        @media (max-width: 768px) {
+            .scroll {
+                padding: 2rem 1.5rem;
+            }
+
+            .scroll::before, .scroll::after {
+                width: 30px;
+            }
+
+            .scroll::before {
+                left: -15px;
+            }
+
+            .scroll::after {
+                right: -15px;
+            }
+
+            .rules-section h3 {
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 0 1rem;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .rules-section:nth-child(2) { animation-delay: 0.2s; }
+        .rules-section:nth-child(3) { animation-delay: 0.4s; }
+        .rules-section:nth-child(4) { animation-delay: 0.6s; }
+        .rules-section:nth-child(5) { animation-delay: 0.8s; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="#home">Pradyut Foundation</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="Error removed copy.html">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="rules-book copy.html">Rules</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="admin-login.html" class="login-btn">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="scroll-container">
+        <div class="scroll">
+            <h2 class="rules-title">Event Rules</h2>
+            <div class="rules-section">
+                <h3><i class="fas fa-gavel"></i> General Rules</h3>
+                <ul class="rules-list">
+                    <li><i class="fas fa-users"></i> The event is open to all students from LPU and other universities.</li>
+                    <li><i class="fas fa-user-friends"></i> Participants can register solo or in teams of 2-4 members.</li>
+                    <li><i class="fas fa-id-card"></i> All participants must carry a valid student ID card for verification.</li>
+                    <li><i class="fas fa-clock"></i> The event will take place overnight (6:00 PM – 6:00 AM) in the designated event area.</li>
+                    <li><i class="fas fa-exclamation-triangle"></i> Any misconduct, plagiarism, or rule violation will result in immediate disqualification.</li>
+                    <li><i class="fas fa-gavel"></i> The decision of judges and organizing team is final and binding.</li>
+                </ul>
+            </div>
+
+            <div class="rules-section">
+                <h3><i class="fas fa-flag-checkered"></i> Competition Rounds</h3>
+                <div class="rounds-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="round1">Round 1</button>
+                        <button class="tab-btn" data-tab="round2">Round 2</button>
+                        <button class="tab-btn" data-tab="round3">Round 3</button>
+                        <button class="tab-btn" data-tab="round4">Round 4</button>
+                    </div>
+
+                    <div id="round1" class="tab-content active">
+                        <h4><i class="fas fa-pen-fancy"></i> Topic Takedown</h4>
+                        <ul class="rules-list">
+                            <li><i class="fas fa-list-ul"></i> Teams select topics (first come, first served)</li>
+                            <li><i class="fas fa-lock"></i> Topics are locked after 5 team selections</li>
+                            <li><i class="fas fa-file-word"></i> Submit blog in Word format (.docx)</li>
+                            <li><i class="fas fa-check-circle"></i> Automated relevance checks will be performed</li>
+                            <li><i class="fas fa-copy"></i> Manual plagiarism checks by organizing team</li>
+                        </ul>
+                    </div>
+
+                    <div id="round2" class="tab-content">
+                        <h4><i class="fas fa-keyboard"></i> Audible to Article</h4>
+                        <ul class="rules-list">
+                            <li><i class="fas fa-user-check"></i> One nominated member per team</li>
+                            <li><i class="fas fa-headphones"></i> Type content from audio clip</li>
+                            <li><i class="fas fa-tachometer-alt"></i> Auto-calculation of WPM and accuracy</li>
+                            <li><i class="fas fa-spell-check"></i> Transcript must match original closely</li>
+                            <li><i class="fas fa-exclamation-circle"></i> Spelling errors reduce score</li>
+                        </ul>
+                    </div>
+
+                    <div id="round3" class="tab-content">
+                        <h4><i class="fas fa-eye-slash"></i> Eyes Shut, Words Flow</h4>
+                        <ul class="rules-list">
+                            <li><i class="fas fa-users"></i> Two nominated members:
+                                <ul>
+                                    <li>Content dictator</li>
+                                    <li>Blindfolded typist</li>
+                                </ul>
+                            </li>
+                            <li><i class="fas fa-check-double"></i> Auto-checks for:
+                                <ul>
+                                    <li>Typing speed (WPM)</li>
+                                    <li>Spelling accuracy</li>
+                                    <li>Topic relevance</li>
+                                </ul>
+                            </li>
+                            <li><i class="fas fa-eye"></i> Judges monitor for rule compliance</li>
+                        </ul>
+                    </div>
+
+                    <div id="round4" class="tab-content">
+                        <h4><i class="fas fa-crown"></i> The Creator's Arena</h4>
+                        <ul class="rules-list">
+                            <li><i class="fas fa-lightbulb"></i> Self-selected topic (no duplicates)</li>
+                            <li><i class="fas fa-file-upload"></i> Required submissions:
+                            <ul>
+                                <li>Blog in Word format (.docx)</li>
+                                <li>2-minute pitch video</li>
+                            </ul>
+                            </li>
+                            <li><i class="fas fa-shield-alt"></i> Auto-check for relevance</li>
+                            <li><i class="fas fa-user-shield"></i> Manual plagiarism check</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rules-section">
+                <h3><i class="fas fa-ban"></i> Elimination & Disqualification</h3>
+                <ul class="rules-list">
+                    <li><i class="fas fa-times-circle"></i> Late submissions</li>
+                    <li><i class="fas fa-copy"></i> Plagiarized content</li>
+                    <li><i class="fas fa-exclamation-triangle"></i> Event conduct violations</li>
+                </ul>
+            </div>
+
+            <div class="rules-section">
+                <h3><i class="fas fa-shield-alt"></i> Event Conduct & Fair Play</h3>
+                <ul class="rules-list">
+                    <li><i class="fas fa-clock"></i> Follow all event timings strictly</li>
+                    <li><i class="fas fa-globe"></i> Submit only through official website</li>
+                    <li><i class="fas fa-robot"></i> AI tools not allowed unless permitted</li>
+                    <li><i class="fas fa-wifi"></i> No external communication for help</li>
+                </ul>
+            </div>
+
+            <div class="rules-section">
+                <h3><i class="fas fa-cogs"></i> Technical & Submission Rules</h3>
+                <ul class="rules-list">
+                    <li><i class="fas fa-file-word"></i> All blogs in .docx format</li>
+                    <li><i class="fas fa-video"></i> Pitch videos on YouTube/Drive</li>
+                    <li><i class="fas fa-link"></i> Website submissions are final</li>
+                    <li><i class="fas fa-redo"></i> No resubmissions without permission</li>
+                </ul>
+            </div>
+
+            <div class="rules-section">
+                <h3><i class="fas fa-trophy"></i> Leaderboard & Results</h3>
+                <ul class="rules-list">
+                    <li><i class="fas fa-chart-line"></i> Live leaderboard updates after each round</li>
+                    <li><i class="fas fa-award"></i> Top teams awarded based on total score</li>
+                    <li><i class="fas fa-clock"></i> Final results at 5:00 AM closing ceremony</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-envelope"></i> management.pradyut@gmail.com </p>
+                <p><i class="fas fa-phone"></i> +91 756 995 2369, +91 760 999 2754 </p>
+                <p><i class="fas fa-map-marker-alt"></i> LPU Campus, Punjab</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/pradyut_foundation21?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/pradyut-foundation/"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.facebook.com/pradyutfoundation/"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#rules">Event Rules</a></li>
+                    <li><a href="#register">Registration</a></li>
+                    <li><a href="#timeline">Schedule</a></li>
+                    <li><a href="#contact">Support</a></li>
+                    <li><a href="admin-login.html" target="_blank">Admin Panel</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Type Till Sunrise - Inter-College Blogathon</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+                button.classList.add('active');
+                document.getElementById(button.dataset.tab).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

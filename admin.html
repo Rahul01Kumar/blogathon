@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Battles Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary-color: #2b2d42;
+            --accent-color: #ef233c;
+            --secondary-color: #8d99ae;
+            --text-color: #2b2d42;
+            --bg-color: #f8f9fa;
+            --sidebar-width: 250px;
+            --success: #01B981;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--primary-color);
+            padding: 2rem 1rem;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin: 1rem 0;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link i {
+            margin-right: 1rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-bar input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background: #4CAF50;
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 500px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .submit-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .round-management {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .round-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-input {
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .timer-controls input {
+            width: 70px;
+            text-align: center;
+        }
+
+        .admin-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn.primary {
+            background: var(--success);
+            color: white;
+        }
+
+        .admin-btn.danger {
+            background-color: var(--error);
+            color: white;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card h3 {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .recent-activity {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .recent-activity h2 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        
+        .activity-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-item i {
+            color: var(--accent-color);
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+
+        .teams-grid, .paymen-list {
+            margin-top: 2rem;
+        }
+
+        .team-filters, .payment-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .status-badge.active {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-badge.pending {
+            background: #f59e0b;
+            color: white;
+        }
+
+       .status-badge.disqualified {
+            background: var(--error);
+            color: white;
+        }
+
+        .status-badge.completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-badge.failed {
+            background: var(--error);
+            color: white;
+        }
+
+        .payment-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Admin Panel</h2>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('dashboard')">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('registrations')">
+                    <i class="fas fa-users"></i>
+                    Registrations
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('teams')">
+                    <i class="fas fa-user-friends"></i>
+                    Teams
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('payments')">
+                    <i class="fas fa-credit-card"></i>
+                    Payments
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div id="dashboard" class="section">
+            <div class="welcome-banner">
+                <h1>Admin Dashboard</h1>
+                <div class="current-time" id="currentTime"></div>
+            </div>
+
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Total Registrations</h3>
+                    <p id="totalRegistrations">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-user-friends"></i>
+                    <h3>Total Teams</h3>
+                    <p id="totalTeams">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Completed Payments</h3>
+                    <p id="completedPayments">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Pending Payments</h3>
+                    <p id="pendingPayments">0</p>
+                </div>
+            </div>
+    
+            <div class="round-management">
+                <h2>Round Management</h2>
+                <div class="round-controls">
+                    <div class="round-selector">
+                        <select id="roundSelect" class="admin-input">
+                            <option value="1">Round 1 - Topic Takedown</option>
+                            <option value="2">Round 2 - Audible to Article</option>
+                            <option value="3">Round 3 - Eyes Shot, Words Flow</option>
+                            <option value="4">Round 4 - The Creator's Arena</option>
+                        </select>
+                    </div>
+                    <div class="timer-controls">
+                        <input type="number" id="hours" min="0" max="23" value="0" placeholder="HH" class="admin-input">
+                        <input type="number" id="minutes" min="0" max="59" value="0" placeholder="MM" class="admin-input">
+                        <input type="number" id="seconds" min="0" max="59" value="0" placeholder="SS" class="admin-input">
+                    </div>
+                    <button id="startRound" class="admin-btn primary">
+                        <i class="fas fa-play"></i> Start Round
+                    </button>
+                    <button id="endRound" class="admin-btn danger">
+                        <i class="fas fa-stop"></i> End Round
+                    </button>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h2>Recent Activity</h2>
+                <div class="activity-list" id="activityList">
+                    <!-- Activity items will be populated dynamically -->
+                </div>
+            </div>
+    
+            <!-- Add round status cards here -->
+            <div class="status-grid">
+                <!-- Same status cards as team dashboard -->
+            </div>
+        </div>
+
+        <div id="registrations" class="section">
+            <h2>Registrations</h2>
+            <div class="search-bar">
+                <input type="text" placeholder="Search..." onkeyup="searchRegistrations()">
+                <button class="action-btn" onclick="exportData()">Export</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Type</th>
+                        <th>Payment Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="registrationsTable">
+                    <!-- Table content will be populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="teams" class="section">
+            <h2>Teams Management</h2>
+            <div class="teams-grid">
+                <div class="team-filters">
+                    <select class="admin-input" id="teamStatusFilter">
+                        <option value="all">All Teams</option>
+                        <option value="active">Active</option>
+                        <option value="pending">Pending</option>
+                        <option value="disqualified">Disqualified</option>
+                    </select>
+                    <input type="text" class="admin-input" placeholder="Search teams..." id="teamSearch">
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Team Name</th>
+                            <th>Members</th>
+                            <th>Current Round</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teamsTable">
+                        <!-- Teams will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="payments" class="section">
+            <h2>Payments Overview</h2>
+            <div class="payment-stats">
+                <div class="stat-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>Total Revenue</h3>
+                    <p id="totalRevenue">₹0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Successful Payments</h3>
+                    <p id="successfulPayments">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Pending Payments</h3>
+                    <p id="pendingPaymentsCount">0</p>
+                </div>
+            </div>
+            <div class="payment-list">
+                <div class="payment-filters">
+                    <select class="admin-input" id="paymentStatusFilter">
+                        <option value="all">All Transactions</option>
+                        <option value="completed">Completed</option>
+                        <option value="pending">Pending</option>
+                        <option value="failed">Failed</option>
+                    </select>
+                    <button class="admin-btn primary" onclick="exportPayments()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Team/Individual</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTable">
+                        <!-- Payments will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Registration</h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editName">Name</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="editMobile">Mobile</label>
+                    <input type="tel" id="editMobile" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPaymentStatus">Payment Status</label>
+                    <select id="editPaymentStatus" required>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                        <option value="failed">Failed</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3002/api'
+            : 'https://back-finn.onrender.com';
+
+        // Check authentication
+        function checkAuth() {
+            const isAuthenticated = localStorage.getItem('adminAuthenticated');
+            if (!isAuthenticated) {
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadRegistrations();
+            showSection('dashboard');
+        });
+
+        function viewDetails(registrationId) {
+            fetch(`${API_URL}/registrations/${registrationId}`)
+            .then(async response => {
+                if (!response.ok) {
+                    // Get the response text for better error logging
+                    const text = await response.text();
+                    console.error('Server response:', text);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(registration => {
+                let teamDetailsHtml = '';
+                if (registration.participationType === 'team' && registration.teamDetails) {
+                    teamDetailsHtml = `
+                        <h3>Team: ${registration.teamDetails.teamName}</h3>
+                        <h4>Team Members:</h4>
+                        ${registration.teamDetails.members.map(member => `
+                            <p>Name: ${member.name}<br>
+                            Mobile: ${member.mobile}<br>
+                            Reg No: ${member.regNo}<br>
+                            Gender: ${member.gender}</p>
+                        `).join('')}
+                    `;
+                }
+
+                Swal.fire({
+                    title: 'Registration Details',
+                    html: `
+                        <div style="text-align: left">
+                            <p><strong>Name:</strong> ${registration.name}</p>
+                            <p><strong>Email:</strong> ${registration.email}</p>
+                            <p><strong>Mobile:</strong> ${registration.mobile}</p>
+                            <p><strong>Gender:</strong> ${registration.gender}</p>
+                            <p><strong>Registration Type:</strong> ${registration.participationType}</p>
+                            <p><strong>LPU Student:</strong> ${registration.isLpu ? 'Yes' : 'No'}</p>
+                            <p><strong>Registration Number:</strong> ${registration.regNo}</p>
+                            <p><strong>Payment Status:</strong> ${registration.paymentStatus}</p>
+                            ${registration.needAccommodation ? `<p><strong>Accommodation:</strong> ${registration.needAccommodation}</p>` : ''}
+                            ${teamDetailsHtml}
+                        </div>
+                    `,
+                    width: '600px',
+                    background: '#fff',
+                    showCloseButton: true,
+                    showConfirmButton: false
+                });
+            })
+            .catch(error => {
+                console.error('Error details:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to load registration details. Please check if the server is running.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        }
+
+        // Load registrations
+        async function loadRegistrations() {
+            try {
+                console.log('Fetching from:', `${API_URL}/registrations`); // Debug URL
+                const response = await fetch(`${API_URL}/registrations`);
+                console.log('Response status:', response.status); // Debug response status
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const registrations = await response.json();
+
+                console.log('Raw response:', registrations); // Debug raw response
+            
+                const tableBody = document.getElementById('registrationsTable');
+                const totalRegistrationsElement = document.getElementById('totalRegistrations');
+            
+                console.log('Received registrations:', registrations); // Debug log
+            
+                tableBody.innerHTML = '';
+                totalRegistrationsElement.textContent = registrations.length;
+
+                if (registrations.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center;">No registrations found</td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                registrations.forEach(reg => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${reg.name || 'N/A'}</td>
+                        <td>${reg.email || 'N/A'}</td>
+                        <td>${reg.mobile || 'N/A'}</td>
+                        <td>${reg.participationType || 'N/A'}</td>
+                        <td>
+                            <span class="status-badge ${reg.paymentStatus || 'pending'}">
+                                ${(reg.paymentStatus || 'pending').charAt(0).toUpperCase() + (reg.paymentStatus || 'pending').slice(1)}
+                            </span>
+                        </td>
+                        <td>
+                            <button onclick="viewDetails('${reg._id}')" class="action-btn">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="deleteRegistration('${reg._id}')" class="action-btn danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading registrations:', error);
+                const tableBody = document.getElementById('registrationsTable');
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: red;">
+                            Error loading registrations. Please check the console for details.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Search functionality
+        function searchRegistrations() {
+            const searchTerm = document.querySelector('.search-bar input').value.toLowerCase();
+            const rows = document.querySelectorAll('#registrationsTable tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function loadTeams() {
+            const teams = JSON.parse(localStorage.getItem('teams')) || [];
+            const tableBody = document.getElementById('teamsTable');
+            
+            tableBody.innerHTML = teams.map(team => `
+                <tr>
+                    <td>${team.name}</td>
+                    <td>${team.members.join(', ')}</td>
+                    <td>Round ${team.currentRound}</td>
+                    <td><span class="status-badge ${team.status}">${team.status}</span></td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editTeam('${team.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="disqualifyTeam('${team.id}')">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadPayments() {
+            const payments = JSON.parse(localStorage.getItem('payments')) || [];
+            const tableBody = document.getElementById('paymentsTable');
+            
+            // Update payment stats
+            const totalRevenue = payments
+                .filter(p => p.status === 'completed')
+                .reduce((sum, p) => sum + p.amount, 0);
+            
+            document.getElementById('totalRevenue').textContent = `₹${totalRevenue}`;
+            document.getElementById('successfulPayments').textContent = payments.filter(p => p.status === 'completed').length;
+            document.getElementById('pendingPaymentsCount').textContent = payments.filter(p => p.status === 'pending').length;
+
+            tableBody.innerHTML = payments.map(payment => `
+                <tr>
+                    <td>${payment.transactionId}</td>
+                    <td>${payment.teamName || payment.individualName}</td>
+                    <td>₹${payment.amount}</td>
+                    <td>${new Date(payment.date).toLocaleDateString()}</td>
+                    <td><span class="status-badge ${payment.status}">${payment.status}</span></td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="updatePaymentStatus('${payment.transactionId}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function exportPayments() {
+            const payments = JSON.parse(localStorage.getItem('payments')) || [];
+            const csv = convertToCSV(payments);
+            downloadCSV(csv, 'payments.csv');
+        }
+
+        // Export data
+        function exportData() {
+            const registrations = JSON.parse(localStorage.getItem('registrations')) || [];
+            const csv = convertToCSV(registrations);
+            downloadCSV(csv, 'registrations.csv');
+        }
+
+        function convertToCSV(data) {
+            const headers = Object.keys(data[0]).join(',');
+            const rows = data.map(obj => Object.values(obj).join(','));
+            return [headers, ...rows].join('\n');
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Edit registration
+        function editRegistration(id) {
+            const registrations = JSON.parse(localStorage.getItem('registrations')) || [];
+            const registration = registrations.find(r => r.id === id);
+            
+            if (registration) {
+                document.getElementById('editName').value = registration.name;
+                document.getElementById('editEmail').value = registration.email;
+                document.getElementById('editMobile').value = registration.mobile;
+                document.getElementById('editPaymentStatus').value = registration.paymentStatus;
+                openModal();
+            }
+        }
+
+        // Delete registration
+        function deleteRegistration(id) {
+            if (confirm('Are you sure you want to delete this registration?')) {
+                const registrations = JSON.parse(localStorage.getItem('registrations')) || [];
+                const updatedRegistrations = registrations.filter(r => r.id !== id);
+                localStorage.setItem('registrations', JSON.stringify(updatedRegistrations));
+                loadRegistrations();
+            }
+        }
+
+        function updateRoundDisplay() {
+            const roundStatus = localStorage.getItem('currentRoundStatus');
+            const roundId = localStorage.getItem('currentRoundId');
+        
+            if (roundStatus === 'active') {
+                document.getElementById('roundSelect').value = roundId;
+                document.getElementById('roundSelect').disabled = true;
+                document.getElementById('startRound').disabled = true;
+                document.getElementById('endRound').disabled = false;
+            } else {
+                document.getElementById('roundSelect').disabled = false;
+                document.getElementById('startRound').disabled = false;
+                document.getElementById('endRound').disabled = true;
+            }
+        }
+
+        updateRoundDisplay();
+        setInterval(updateRoundDisplay, 1000);
+
+        function updateTimer() {
+            const endTime = localStorage.getItem('roundEndTime');
+            const roundStatus = localStorage.getItem('currentRoundStatus');
+            
+            if (roundStatus === 'active' && endTime) {
+                const now = new Date().getTime();
+                const timeLeft = parseInt(endTime) - now;
+                
+                if (timeLeft <= 0) {
+                    // Time's up
+                    localStorage.setItem('currentRoundStatus', 'inactive');
+                    localStorage.removeItem('roundEndTime');
+                    localStorage.removeItem('initialDuration');
+                    
+                    // Reset and enable inputs
+                    document.getElementById('hours').value = '0';
+                    document.getElementById('minutes').value = '0';
+                    document.getElementById('seconds').value = '0';
+                    document.getElementById('hours').readOnly = false;
+                    document.getElementById('minutes').readOnly = false;
+                    document.getElementById('seconds').readOnly = false;
+                    
+                    updateRoundDisplay();
+                    Swal.fire({
+                        title: 'Time\'s up!',
+                        text: 'The round has ended',
+                        icon: 'info',
+                        confirmButtonText: 'OK',
+                        background: '#2b2d42',
+                        color: '#fff',
+                        showClass: {
+                            popup: 'animate__animated animate__bounceIn'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__bounceOut'
+                        }
+                    })
+                    return;
+                }
+
+                // Calculate hours, minutes, seconds
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                // Update input fields
+                document.getElementById('hours').value = hours;
+                document.getElementById('minutes').value = minutes;
+                document.getElementById('seconds').value = seconds;
+            }
+        }
+
+        if (localStorage.getItem('currentRoundStatus') === 'active') {
+            document.getElementById('hours').readOnly = true;
+            document.getElementById('minutes').readOnly = true;
+            document.getElementById('seconds').readOnly = true;
+            updateTimer();
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('adminAuthenticated');
+            window.location.href = 'admin-login.html';
+        }
+        
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+        }
+
+        const audioClips = [
+            'https://example.com/audio1.mp3',
+            'https://example.com/audio2.mp3',
+            'https://example.com/audio3.mp3',
+            'https://example.com/audio4.mp3',
+            // Add more audio URLs as needed
+        ];
+
+        function assignAudioToTeams() {
+            const teams = JSON.parse(localStorage.getItem('teams')) || [];
+            let audioAssignments = {};
+            
+            // Group teams into sets of 5
+            for (let i = 0; i < teams.length; i += 5) {
+                const teamGroup = teams.slice(i, i + 5);
+                // Randomly select an audio clip for this group
+                const randomAudioIndex = Math.floor(Math.random() * audioClips.length);
+                const selectedAudio = audioClips[randomAudioIndex];
+                
+                // Assign the same audio to all teams in this group
+                teamGroup.forEach(team => {
+                    audioAssignments[team.id] = selectedAudio;
+                });
+            }
+
+            // Store the assignments
+            localStorage.setItem('audioAssignments', JSON.stringify(audioAssignments));
+            
+            Swal.fire({
+                title: 'Success!',
+                text: 'Audio clips have been assigned to teams',
+                icon: 'success',
+                background: '#2b2d42',
+                color: '#fff'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadRegistrations();
+            loadTeams();
+            loadPayments();
+            showSection('dashboard');
+
+            document.getElementById('startRound').addEventListener('click', () => {
+                const roundId = document.getElementById('roundSelect').value;
+                const hours = parseInt(document.getElementById('hours').value) || 0;
+                const minutes = parseInt(document.getElementById('minutes').value) || 0;
+                const seconds = parseInt(document.getElementById('seconds').value) || 0;
+
+                if (hours === 0 && minutes === 0 && seconds === 0) {
+                    Swal.fire({
+                        title: 'Invalid Duration!',
+                        text: 'Please set a valid time duration',
+                        icon: 'warning',
+                        confirmButtonText: 'OK',
+                        background: '#2b2d42',
+                        color: '#fff',
+                        showClass: {
+                            popup: 'animate__animated animate__fadeInDown'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOutUp'
+                        }
+                    })
+                    return;
+                }
+
+                const duration = (hours * 3600 + minutes * 60 + seconds) * 1000;
+                const endTime = new Date().getTime() + duration;
+
+                localStorage.setItem('currentRoundStatus', 'active');
+                localStorage.setItem('currentRoundId', roundId);
+                localStorage.setItem('roundEndTime', endTime.toString());
+                localStorage.setItem('initialDuration', duration.toString());
+
+                document.getElementById('hours').readOnly = true;
+                document.getElementById('minutes').readOnly = true;
+                document.getElementById('seconds').readOnly = true;
+                document.getElementById('roundSelect').disabled = true;
+                document.getElementById('startRound').disabled = true;
+                document.getElementById('endRound').disabled = false;
+
+                if (!window.timerInterval) {
+                    window.timerInterval = setInterval(updateTimer, 1000);
+                }
+                updateTimer();
+                updateRoundDisplay();
+
+                Swal.fire({
+                    title: 'Round Started!',
+                    text: `Round ${roundId} timer has been started successfully`,
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    background: '#2b2d42',
+                    color: '#fff',
+                    showClass: {
+                        popup: 'animate__animated animate__slideInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__slideOutUp'
+                    }
+                })
+
+                if (roundId === '2') {
+                assignAudioToTeams();
+                }
+            });
+
+            document.getElementById('endRound').addEventListener('click', () => {
+                localStorage.setItem('currentRoundStatus', 'inactive');
+                localStorage.removeItem('roundEndTime');
+                localStorage.removeItem('initialDuration');
+                
+                if (window.timerInterval) {
+                    clearInterval(window.timerInterval);
+                    window.timerInterval = null;
+                }
+
+                document.getElementById('hours').value = '0';
+                document.getElementById('minutes').value = '0';
+                document.getElementById('seconds').value = '0';
+                document.getElementById('hours').readOnly = false;
+                document.getElementById('minutes').readOnly = false;
+                document.getElementById('seconds').readOnly = false;
+                document.getElementById('roundSelect').disabled = false;
+                document.getElementById('startRound').disabled = false;
+                document.getElementById('endRound').disabled = true;
+                
+                updateRoundDisplay();
+                Swal.fire({
+                    title: 'Round Ended!',
+                    text: 'The round has been ended successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    background: '#2b2d42',
+                    color: '#fff',
+                    showClass: {
+                        popup: 'animate__animated animate__zoomIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__zoomOut'
+                    }
+                });
+            });
+
+            const savedTranscript = localStorage.getItem('originalTranscript');
+            if (savedTranscript) {
+                document.getElementById('transcriptText').value = savedTranscript;
+            }
+        });
+    </script>
+</body>
+</html>

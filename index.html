@@ -1,104 +1,1972 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Make a web page</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Blog Battles: Midnight Edition - 12-Hour Blogathon</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/vanilla-whale" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/1fed4454352f201d50b8db049a6d172f?family=Vanilla+Whale" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary-color: #2b2d42;
+            --accent-color: #ef233c;
+            --secondary-color: #8d99ae;
+            --text-color: #2b2d42;
+            --bg-color: #ffffff;
+            --section-bg: #edf2f4;
+            --gradient-opacity: 1;
+            --accent-color-rgb: 239, 35, 60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .nav-links li {
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-color);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .login-btn {
+            background: var(--accent-color);
+            color: white !important;
+            padding: 0.8rem 2rem !important;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(239, 35, 60, 0.2);
+        }
+
+        .login-btn::before {
+            display: none !important;
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        /* Hero Section Styles */
+        .hero {
+            padding-top: 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                circle at top right,
+                rgba(255, 255, 255, 0.15) 0%,
+                transparent 70%
+            );
+            pointer-events: none;
+        }
+
+        .event-logo {
+            width: 200px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .event-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding: 2rem 20px;
+            animation: fadeInUp 1.5s ease-out;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-content h1 {
+            font-family: 'Space Grotesk', 'Arial', sans-serif;
+            font-size: 4rem;
+            margin-bottom: 0.3rem;
+            color: white;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 8px 8px 8px rgba(0, 0, 0, 0.2);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .tagline {
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-family: 'Space Grotesk', 'Arial', sans-serif;
+            color: transparent;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            text-shadow: none;
+            text-align: center;
+            animation: gradientFlow 3s ease infinite;
+        }
+
+        .intro-text {
+            max-width: 800px;
+            margin: 2rem auto;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+        }
+
+        /* Section Styles */
+        .section {
+            position: relative;
+            padding: 8rem 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            background-color: white;
+        }
+
+        .section.visible{
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--accent-color), transparent);
+        }
+
+        .section:last-child::after {
+            display: none;
+        }
+
+        .section h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        /* Round Card Styles */
+        .round-container{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .round-card-animated{
+            perspective: none;
+            height: 450px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            background: linear-gradient(white, white) padding-box, linear-gradient(45deg, var(--accent-color), var(--primary-color) border-box);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .round-front, .round-back{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 2rem;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .round-back{
+            opacity: 0;
+            transform: translateX(100%);
+            scrollbar-width: thin;
+        }
+
+        .round-back::-webkit-scrollbar{
+            width: 8px;
+        }
+
+        .round-back::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .round-back::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .round-card-animated.active .round-front{
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+
+        .round-card-animated.active .round-back{
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .round-card-animated:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .round-icon{
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .round-brief{
+            color: #666;
+            margin: 1rem 0;
+        }
+
+        .learn-more-btn{
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .learn-more-btn:hover{
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .round-details{
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .round-details li{
+            margin: 0.8rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .round-desciption{
+            text-align: left;
+        }
+
+        .round-desciption ul{
+            list-style: disc;
+            padding-left: 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .round-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .round-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .round-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        /* Button Styles */
+        .cta-buttons {
+            margin-top: 3rem;
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .primary-btn, .secondary-btn {
+            padding: 1.2rem 3rem;
+            font-size: 20px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .primary-btn {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .secondary-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .primary-btn:hover, .secondary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Gradient Overlay */
+        .gradient-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 100vh;
+            background: linear-gradient(
+                135deg,
+                rgba(43, 45, 66, 0.95),
+                rgba(141, 53, 95, 0.9),
+                rgba(77, 25, 77, 0.95),
+                rgba(45, 49, 85, 0.95)
+            );
+            opacity: 1;
+            transition: opacity 0.5s ease;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Form Styles */
+        .registration-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-step {
+            transition: all 0.3s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+
+        .radio-group label {
+            margin-right: 2rem;
+        }
+
+        .btn {
+            background: var(--accent-color);
+            border: none;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: #d90429;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 35, 60, 0.2);
+        }
+
+        .back-btn {
+            background: var(--secondary-color);
+            margin-right: 1rem;
+        }
+
+        /* Team Member Styles */
+        .team-member {
+            background: var(--section-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .team-member h4 {
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .photo-requirements {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .photo-requirements ul {
+            margin-top: 0.5rem;
+            padding-left: 1.5rem;
+        }
+
+        /* Event Details Styles */
+        .event-details {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .event-details p {
+            color: white;
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Timeline Table Styles */
+        .timeline-table {
+            max-width: 1000px;
+            margin: 0 auto;
+            overflow-x: auto;
+            padding: 2rem;
+        }
+
+        .timeline-table table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .timeline-table th {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .timeline-table td {
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timeline-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .timeline-table tr:nth-child(even) {
+            background: var(--section-bg);
+        }
+
+        .timeline-table tr:hover {
+            background: rgba(var(--accent-color-rgb), 0.05);
+            transform: scale(1.02);
+        }
+
+        .timeline-table td:first-child {
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 4rem 0 1rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            padding: 0 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--accent-color);
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .footer-section p {
+            margin: 0.8rem 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 0 1rem;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+
+            .round-card-animated {
+                height: auto;
+            }
+
+            .round-front, .round-back {
+                position: relative;
+                height: auto;
+            }
+
+            .round-back {
+                display: auto;
+            }
+
+            .round-card-animated:hover.round-front {
+                transform: none;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0.8rem 0;
+        }
+
+        /* Add responsive design styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content p {
+                font-size: 1rem;
+            }
+            
+            .registration-form {
+                width: 95%;
+                padding: 1rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            .team-members {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.5rem;
+            }
+            
+            .registration-form {
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+        }
+
+    </style>
+
 </head>
-
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: gray; border: 2px solid black;">
-            <a class="navbar-brand" href="#">FOOD</a>
-            <button class="navbar-toggler" style="border: black 2px solid;" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="#home">Pradyut Foundation</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="rules-book copy.html">Rules</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="admin-login.html" class="login-btn" target="_blank">Login</a></li>
+            </ul>
+        </div>
+    </nav>
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-                <div class="nav navbar-nav" id="nav-text">
-                    <a class="nav-item nav-link active" href="#">Chicken<span class="sr-only">(current)</span></a>
-                    <a class="nav-item nav-link" href="#"> <span class="hidden-md-up">Beef</span></a>
-                    <a class="nav-item nav-link" href="#">Sushi</a>
+    <section class="hero" id="home">
+        <div class="gradient-overlay"></div>
+        <div class="hero-content">
+            <img src="logo.png" alt="Blog Battles Logo" class="event-logo">
+            <h1>Type Till Sunrise</h1>
+            <p class="tagline">Where Words Never Sleep</p>
+            <div class="event-details">
+                <p><i class="fas fa-calendar"></i> April 4, 2025</p>
+                <p><i class="fas fa-clock"></i> 6:00 PM - 6:00 AM</p>
+                <p><i class="fas fa-map-marker-alt"></i> LPU Campus, Block 32</p>
+            </div>
+            <div class="intro-text">
+                <p>An overnight blogging competition where teams battle through creative challenges, 
+                   testing their writing prowess, creativity, and teamwork in a 12-hour marathon of words.</p>
+            </div>
+            <div class="cta-buttons">
+                <a href="#register" class="btn primary-btn">Register Now</a>
+                <a href="team-login.html" class="btn secondary-btn">Team Dashboard</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container">
+            <h2>About the Event</h2>
+            <p>Type Till Sunrise is not just another blogging 
+                contest — it's a creative showdown under the stars that 
+                blends the excitement of a hackathon with the flair of 
+                creative writing. This unique overnight inter-university 
+                blogathon is designed to push your creative limits while 
+                testing your speed, adaptability, and teamwork in a 
+                high-pressure, high-energy environment. <br> <br>
+                Unlike traditional competitions, Type Till Sunrise 
+                unfolds over the course of a 12-hour overnight marathon. From 
+                sunset to sunrise, teams will work together to brainstorm, draft, 
+                refine, and present creative blogs across multiple dynamic rounds. 
+                Each round brings new challenges, unexpected twists, and a chance 
+                for your team to shine.
+            </p>
+        </div>
+    </section>
+
+    <section id="rounds" class="section">
+        <div class="container">
+            <h2>Competition Rounds</h2>
+            <div class="rounds-container">
+                <div class="round-card-animated">
+                    <div class="round-front">
+                        <div class="round-icon">
+                            <i class="fas fa-pen-fancy"></i>
+                        </div>
+                        <h3>Round 1: Topic Takedown</h3>
+                        <p class="round-brief">Teams will select a predefined topic (first-come, first-served, max 5 teams per topic) 
+                            and write a well-structured blog within 2 hours. The blog will be evaluated for relevance (auto-checked), 
+                            originality (manual plagiarism check), and content quality. Submissions must be in Word format (.docx).</p>
+                        <button class="learn-more-btn">Learn More</button>
+                    </div>
+                    <div class="round-back">
+                        <h4>Topic Takedown Details</h4>
+                        <ul class="round-details">
+                            <li><i class="fas fa-clock"></i> Duration: 2 hours</li>
+                            <li><i class="fas fa-tasks"></i> Word Limit: 800-1000 words</li>
+                        </ul>
+                        <div class="round-description">
+                            <p>Choose from limited topic slots and create a compelling blog post. Topics will be revealed at the start of the round.</p>
+                            <h5>Judging Criteria:</h5>
+                            <ul>
+                                <li>Content Quality (40%)</li>
+                                <li>Creativity (30%)</li>
+                                <li>Structure (20%)</li>
+                                <li>Language (10%)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="round-card-animated">
+                    <div class="round-front">
+                        <div class="round-icon">
+                            <i class="fas fa-headphones"></i>
+                        </div>
+                        <h3>Round 2: Audible to Article</h3>
+                        <p class="round-brief">A typing speed challenge where one team member 
+                            transcribes an audio clip in real time. The system will auto-calculate typing speed (WPM) 
+                            and accuracy, with deductions for spelling errors. The winner will be announced immediately 
+                            and awarded a medal and certificate on the spot.</p>
+                        <button class="learn-more-btn">Learn More</button>
+                    </div>
+                    <div class="round-back">
+                        <h4>Audible to Article Details</h4>
+                        <ul class="round-details">
+                            <li><i class="fas fa-clock"></i> Duration: 1 hour</li>
+                            <li><i class="fas fa-keyboard"></i> Min WPM: 40</li>
+                        </ul>
+                        <div class="round-description">
+                            <p>Listen to audio content and transform it into a well-structured article while maintaining accuracy and adding creative elements.</p>
+                            <h5>Judging Criteria:</h5>
+                            <ul>
+                                <li>Accuracy (40%)</li>
+                                <li>Formatting (30%)</li>
+                                <li>Speed (20%)</li>
+                                <li>Enhancement (10%)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="round-card-animated">
+                    <div class="round-front">
+                        <div class="round-icon">
+                            <i class="fas fa-eye-slash"></i>
+                        </div>
+                        <h3>Round 3: Eyes Shut, Words Flow</h3>
+                        <p class="round-brief">One team member dictates, and another blindfolded member types in a live text box. 
+                            The system will automatically check spelling accuracy, typing speed, and topic relevance. The most 
+                            accurate and fastest team will be declared winners immediately and awarded a medal and certificate.</p>
+                        <button class="learn-more-btn">Learn More</button>
+                    </div>
+                    <div class="round-back">
+                        <h4>Eyes Shut, Words Flow Details</h4>
+                        <ul class="round-details">
+                            <li><i class="fas fa-clock"></i> Duration: 1.5 hours</li>
+                            <li><i class="fas fa-users"></i> Team Coordination Required</li>
+                        </ul>
+                        <div class="round-description">
+                            <p>One team member dictates while another types with eyes closed, testing trust and coordination.</p>
+                            <h5>Judging Criteria:</h5>
+                            <ul>
+                                <li>Typing Accuracy (35%)</li>
+                                <li>Team Coordination (30%)</li>
+                                <li>Content Quality (25%)</li>
+                                <li>Time Management (10%)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="round-card-animated">
+                    <div class="round-front">
+                        <div class="round-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h3>Round 4: The Creator's Arena</h3>
+                        <p class="round-brief">Teams will choose their own topic (unique per team) and submit both a blog and 
+                            a 2-minute pitch video. The system will auto-check relevance, while judges evaluate content quality 
+                            and presentation. </p>
+                        <button class="learn-more-btn">Learn More</button>
+                    </div>
+                    <div class="round-back">
+                        <h4>Creator's Arena Details</h4>
+                        <ul class="round-details">
+                            <li><i class="fas fa-clock"></i> Duration: 5 hours total</li>
+                            <li><i class="fas fa-file-alt"></i> Word Limit: 1200 words</li>
+                        </ul>
+                        <div class="round-description">
+                            <p>Create a comprehensive blog with multimedia elements and present through a pitch video.</p>
+                            <h5>Sub-rounds:</h5>
+                            <ul>
+                                <li>Ideation & Writing (3 hours)</li>
+                                <li>Visual Enhancement (1 hour)</li>
+                                <li>Video Pitch (1 hour)</li>
+                            </ul>
+                            <h5>Judging Criteria:</h5>
+                            <ul>
+                                <li>Content Quality (30%)</li>
+                                <li>Visual Appeal (25%)</li>
+                                <li>Presentation (25%)</li>
+                                <li>Innovation (20%)</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
-
-    <h1 class="heading-title text-center">Our Menu</h1>
-
-    <div class="box">
-        <div class="container item1">
-            <section>
-                <div id="chicken">
-                    <p>Chicken</p>
-                </div>
-                <p>Chickens are gregarious birds and live together in flocks. They have a communal approach to the
-                    incubation of eggs and raising of young. Individual chickens in a flock will dominate others,
-                    establishing a "pecking order", with dominant individuals having priority for food access and
-                    nesting locations. Removing hens or roosters from a flock causes a temporary disruption to this
-                    social order until a new pecking order is established. Adding hens, especially younger birds, to an
-                    existing flock can lead to fighting and injury.[19] When a rooster finds food, he may call other
-                    chickens to eat first. He does this by clucking in a high pitch as well as picking up and dropping
-                    the food. This behavior may also be observed in mother hens to call their chicks and encourage them
-                    to eat.</p>
-            </section>
         </div>
+    </section>
 
-        <div class="container item2">
-            <section>
-                <div id="beef">
-                    <p>Beef</p>
-                </div>
-                <p>Chickens are gregarious birds and live together in flocks. They have a communal approach to the
-                    incubation of eggs and raising of young. Individual chickens in a flock will dominate others,
-                    establishing a "pecking order", with dominant individuals having priority for food access and
-                    nesting locations. Removing hens or roosters from a flock causes a temporary disruption to this
-                    social order until a new pecking order is established. Adding hens, especially younger birds, to an
-                    existing flock can lead to fighting and injury.[19] When a rooster finds food, he may call other
-                    chickens to eat first. He does this by clucking in a high pitch as well as picking up and dropping
-                    the food. This behavior may also be observed in mother hens to call their chicks and encourage them
-                    to eat.</p>
-            </section>
+    <section id="timeline" class="section">
+        <div class="container">
+            <h2>Event Timeline</h2>
+            <div class="timeline-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Round</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>6:00 PM - 6:30 PM</td>
+                            <td>Inauguration</td>
+                            <td>Opening Ceremony, Team Allotment</td>
+                        </tr>
+                        <tr>
+                            <td>6:30 PM - 8:30 PM</td>
+                            <td>Round 1: Simple Blogging</td>
+                            <td>Topic Selection + Blogging</td>
+                        </tr>
+                        <tr>
+                            <td>8:30 PM - 9:00 PM</td>
+                            <td>Break</td>
+                            <td>Snacks & Tea</td>
+                        </tr>
+                        <tr>
+                            <td>9:00 PM - 10:00 PM</td>
+                            <td>Round 2: Fast Finger First</td>
+                            <td>Typing Challenge</td>
+                        </tr>
+                        <tr>
+                            <td>10:00 PM - 11:30 PM</td>
+                            <td>Round 3: Blind Blogging</td>
+                            <td>Dictation + Blind Typing</td>
+                        </tr>
+                        <tr>
+                            <td>11:30 PM - 12:00 AM</td>
+                            <td>Break</td>
+                            <td>Refreshments</td>
+                        </tr>
+                        <tr>
+                            <td>12:00 AM - 3:00 AM</td>
+                            <td>Round 4: Creativity</td>
+                            <td>Ideation + Writing (1200 Words Draft)</td>
+                        </tr>
+                        <tr>
+                            <td>3:00 AM - 4:00 AM</td>
+                            <td>Round 4: Enhancement</td>
+                            <td>Add Images, Beautify</td>
+                        </tr>
+                        <tr>
+                            <td>4:00 AM - 5:00 AM</td>
+                            <td>Round 4: Presentation</td>
+                            <td>Record Pitch Video</td>
+                        </tr>
+                        <tr>
+                            <td>5:00 AM - 6:00 AM</td>
+                            <td>Judging + Results</td>
+                            <td>Announcement & Prize Distribution</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </section>
 
-        <div class="container item3">
-            <section>
-                <div id="sushi">
-                    <p>Sushi</p>
+    <section id="register" class="section">
+        <div class="container">
+            <h2>Register Now</h2>
+            <form class="registration-form" id="registrationForm">
+                <!-- Step 1: Basic Info -->
+                <div class="form-step" id="step1">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required pattern="[A-Za-z\s]+" title="Please enter a valid name">
+                    </div>
+                    <button type="button" class="btn next-btn" onclick="validateAndNext('step1', 'step2')">Next</button>
                 </div>
-                <p>Chickens are gregarious birds and live together in flocks. They have a communal approach to the
-                    incubation of eggs and raising of young. Individual chickens in a flock will dominate others,
-                    establishing a "pecking order", with dominant individuals having priority for food access and
-                    nesting locations. Removing hens or roosters from a flock causes a temporary disruption to this
-                    social order until a new pecking order is established. Adding hens, especially younger birds, to an
-                    existing flock can lead to fighting and injury.[19] When a rooster finds food, he may call other
-                    chickens to eat first. He does this by clucking in a high pitch as well as picking up and dropping
-                    the food. This behavior may also be observed in mother hens to call their chicks and encourage them
-                    to eat.</p>
-            </section>
+    
+                <!-- Step 2: Contact -->
+                <div class="form-step hidden" id="step2">
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="tel" id="mobile" pattern="[0-9]{10}" required title="Please enter a valid 10-digit mobile number">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                        <div id="emailError" class="error-message" style="display: none; color: red; font-size: 0.8em; margin-top: 5px;"></div>
+                    </div>
+                    <button type="button" class="btn back-btn" onclick="showStep('step1')">Back</button>
+                    <button type="button" class="btn next-btn" onclick="validateAndNext('step2', 'step3')">Next</button>
+                </div>
+    
+                <!-- Step 3: Gender -->
+                <div class="form-step hidden" id="step3">
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <div class="radio-group">
+                            <input type="radio" id="male" name="gender" value="male" required>
+                            <label for="male">Male</label>
+                            <input type="radio" id="female" name="gender" value="female">
+                            <label for="female">Female</label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn back-btn" onclick="showStep('step2')">Back</button>
+                    <button type="button" class="btn next-btn" onclick="validateAndNext('step3', 'step4')">Next</button>
+                </div>
+    
+                <!-- Step 4: LPU Student -->
+                <div class="form-step hidden" id="step4">
+                    <div class="form-group">
+                        <label>Are you a student of Lovely Professional University?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="lpuYes" name="isLpu" value="yes" onchange="toggleRegNo()">
+                            <label for="lpuYes">Yes</label>
+                            <input type="radio" id="lpuNo" name="isLpu" value="no" onchange="toggleRegNo()">
+                            <label for="lpuNo">No</label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="regNoGroup">
+                        <label for="regNumber">Registration Number</label>
+                        <input type="text" id="regNumber" pattern="[0-9]+" title="Please enter a valid registration number" required>
+                    </div>
+                    <button type="button" class="btn back-btn" onclick="showStep('step3')">Back</button>
+                    <button type="button" class="btn next-btn" onclick="validateAndNext('step4', 'step5')">Next</button>
+                </div>
+    
+                <!-- Step 5: Participation Type -->
+                <div class="form-step hidden" id="step5">
+                    <div class="form-group">
+                        <label>How would you like to participate?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="solo" name="participationType" value="solo" onchange="toggleTeamFields()">
+                            <label for="solo">Solo</label>
+                            <input type="radio" id="team" name="participationType" value="team" onchange="toggleTeamFields()">
+                            <label for="team">Team</label>
+                        </div>
+                    </div>
+                    <div id="teamFields" class="hidden">
+                        <!-- Team member fields will be added dynamically -->
+                    </div>
+                    <div id="soloConsent" class="hidden">
+                        <div class="form-group">
+                            <label for="consent">
+                                <input type="checkbox" id="consent" required>
+                                I agree to participate solo in <strong>Type Till Sunrise</strong> and accept the following:
+                                <ul>
+                                    <li>I will be <strong>randomly paired</strong> with other solo participants if required.</li>
+                                    <li>I will <strong>cooperate with my assigned team</strong>, and refusal may lead to <strong>disqualification</strong>.</li>
+                                    <li>I have read and accept all event rules.</li>
+                                </ul>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn back-btn" onclick="showStep('step4')">Back</button>
+                    <button type="button" class="btn next-btn" onclick="validateAndNext('step5', 'step6')">Next</button>
+                </div>
+
+                <div class="form-step hidden" id="step6">
+                    <div class="form-group accommodation-group hidden">
+                        <label>Do you need accommodation?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="accomYes" name="needAccommodation" value="yes">
+                            <label for="accomYes">Yes</label>
+                            <input type="radio" id="accomNo" name="needAccommodation" value="no">
+                            <label for="accomNo">No</label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn back-btn" onclick="showStep('step5')">Back</button>
+                    <button type="button" class="btn next-btn" onclick="validateAndNext('step6', 'step7')">Next</button>
+                </div>
+
+                <div class="form-step hidden" id="step7">
+                    <div class="form-group">
+                        <label for="passportPhoto">Upload Passport Size Photo</label>
+                        <input type="file" id="passportPhoto" accept="image/*" required>
+                        <p class="photo-requirements">Photo requirements:
+                            <ul>
+                                <li>Recent passport size photograph</li>
+                                <li>Maximum file size: 2MB</li>
+                                <li>Format: JPG, JPEG, or PNG</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <button type="button" class="btn back-btn" onclick="showStep('step6')">Back</button>
+                    <button type="button" class="btn next-btn" onclick="validateAndProceedToPayment()">Proceed to Payment</button>
+                </div>
+            </form>
         </div>
+    </section>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-envelope"></i> management.pradyut@gmail.com </p>
+                <p><i class="fas fa-phone"></i> +91 756 995 2369, +91 760 999 2754 </p>
+                <p><i class="fas fa-map-marker-alt"></i> LPU Campus, Punjab</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/pradyut_foundation21?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/pradyut-foundation/"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.facebook.com/pradyutfoundation/"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#rules">Event Rules</a></li>
+                    <li><a href="#register">Registration</a></li>
+                    <li><a href="#timeline">Schedule</a></li>
+                    <li><a href="#contact">Support</a></li>
+                    <li><a href="admin-login.html" target="_blank">Admin Panel</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Type Till Sunrise - Inter-College Blogathon</p>
+        </div>
+    </footer>
+    <!-- Remove this script from inside style -->
+<style>
+    /* ... existing styles ... */
+    .team-member h4 {
+        color: var(--accent-color);
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+    }
+</style>
 
-    </div>
+<script>
+    // Add this at the beginning of your script section
+    function resetRegistrationForm() {
+        const registrationForm = document.getElementById('registrationForm');
+        if (registrationForm) {
+            // Reset all form inputs
+            registrationForm.reset();
+            
+            // Reset all radio buttons
+            const radioButtons = registrationForm.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Reset all checkboxes
+            const checkboxes = registrationForm.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Reset file input
+            const fileInput = document.getElementById('passportPhoto');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+            
+            // Hide all steps except the first one
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.classList.add('hidden');
+            });
+            document.getElementById('step1').classList.remove('hidden');
+            
+            // Reset team fields
+            const teamFields = document.getElementById('teamFields');
+            if (teamFields) {
+                teamFields.innerHTML = '';
+                teamFields.classList.add('hidden');
+            }
+            
+            // Reset solo consent
+            const soloConsent = document.getElementById('soloConsent');
+            if (soloConsent) {
+                soloConsent.classList.add('hidden');
+            }
+            
+            // Reset accommodation group
+            const accommodationGroup = document.querySelector('.accommodation-group');
+            if (accommodationGroup) {
+                accommodationGroup.classList.add('hidden');
+            }
+            
+            // Reset registration number input
+            const regNoInput = document.getElementById('regNumber');
+            if (regNoInput) {
+                regNoInput.pattern = "[0-9]+";
+                regNoInput.title = "Please enter a valid registration number";
+            }
+        }
+    }
 
+    // Call reset function when page loads
+    document.addEventListener('DOMContentLoaded', resetRegistrationForm);
 
+    // Add click event listener to the registration link in navigation
+    document.querySelector('a[href="#register"]').addEventListener('click', function(e) {
+        e.preventDefault();
+        resetRegistrationForm();
+        document.getElementById('register').scrollIntoView({ behavior: 'smooth' });
+    });
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Form functions
+    function showStep(stepId) {
+        document.querySelectorAll('.form-step').forEach(step => step.classList.add('hidden'));
+        const currentStep = document.getElementById(stepId);
+        currentStep.classList.remove('hidden');
+    }
+
+    // Add this function to check email existence
+    async function checkEmailExists(email) {
+        try {
+            const response = await fetch('/api/check-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await response.json();
+            return data.exists;
+        } catch (error) {
+            console.error('Error checking email:', error);
+            return false;
+        }
+    }
+
+    // Modify the validateAndNext function to include both email validation and the original validation logic
+    async function validateAndNext(currentStep, nextStep) {
+        console.log(`validateAndNext called for ${currentStep} -> ${nextStep}`);
+
+        const currentStepElement = document.getElementById(currentStep);
+        if (!currentStepElement) {
+            console.error(`Step ${currentStep} not found in DOM.`);
+            return;
+        }
+
+        const inputs = currentStepElement.querySelectorAll('input[required]:not([type="checkbox"])');
+        let isValid = true;
+
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                isValid = false;
+                input.reportValidity();
+                console.error(`Invalid Input: ${input.id} - Value: ${input.value}`);
+            }
+        });
+
+        if (!isValid) {
+            console.error(`Validation failed for ${currentStep}, stopping execution.`);
+            return;
+        }
+
+        // Email validation for step 2
+        if (currentStep === 'step2') {
+            const email = document.getElementById('email').value;
+            const emailError = document.getElementById('emailError');
+            
+            // Check if email exists
+            const emailExists = await checkEmailExists(email);
+            if (emailExists) {
+                emailError.textContent = 'This email is already registered. Please use a different email.';
+                emailError.style.display = 'block';
+                return;
+            } else {
+                emailError.style.display = 'none';
+            }
+        }
+
+        // Team validation for step 5
+        if (currentStep === 'step5') {
+            const isTeam = document.getElementById('team').checked;
+            if (isTeam) {
+                if (!validateTeamFields()) {
+                    return;
+                }
+            } else {
+                if (!validateSoloConsent()) {
+                    return;
+                }
+            }
+
+            const isLPU = document.getElementById('lpuYes').checked;
+            if (isLPU) {
+                console.log("LPU student detected, attempting to proceed with payment validation...");
+                showStep('step7');
+                return;
+            }
+        }
+        
+        console.log(`✅ Moving from ${currentStep} to ${nextStep}`);
+        showStep(nextStep);
+    }
+
+    function validateTeamFields() {
+        const teamFields = document.getElementById('teamFields');
+        const teamInputs = teamFields.querySelectorAll('input[required]');
+
+        for (const input of teamInputs) {
+            if (!input.checkValidity()) {
+                const memberNumber = input.id.match(/\d/)[0];
+                const fieldName = input.id.replace(`member${memberNumber}`, '').toLowerCase();
+                let errorMessage = input.type === 'radio' 
+                    ? `Please select gender for Team Member ${memberNumber}`
+                    : getErrorMessage(input, fieldName, memberNumber);
+                alert(errorMessage);
+                input.focus();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function validateSoloConsent() {
+        const consent = document.getElementById('consent');
+        if (!consent.checked) {
+            alert('Please accept the terms and conditions.');
+            return false;
+        }
+        return true;
+    }
+
+    function toggleRegNo() {
+        const regNoInput = document.getElementById('regNumber');
+        const isLpu = document.getElementById('lpuYes').checked;
+        const accommodationGroup = document.querySelector('.accommodation-group');
+
+        if (isLpu) {
+            regNoInput.pattern = "[0-9]+";
+            regNoInput.title = "Please enter a valid LPU registration number (numbers only)";
+        } else {
+            regNoInput.pattern = "[A-Za-z0-9\\-]+";
+            regNoInput.title = "Please enter your college registration number";
+        }
+        accommodationGroup.classList.toggle('hidden', isLpu);
+    }
+
+    function toggleTeamFields() {
+        const teamFields = document.getElementById('teamFields');
+        const soloConsent = document.getElementById('soloConsent');
+        const isTeam = document.getElementById('team').checked;
+
+        if (isTeam) {
+            teamFields.classList.remove('hidden');
+            soloConsent.classList.add('hidden');
+            createTeamFields();
+        } else {
+            teamFields.classList.add('hidden');
+            soloConsent.classList.remove('hidden');
+            teamFields.innerHTML = '';
+        }
+    }
+
+    function createTeamFields() {
+        const teamFields = document.getElementById('teamFields');
+        const isLpu = document.getElementById('lpuYes').checked;
+        teamFields.innerHTML = `
+            <div class="form-group">
+                <label for="teamName">Team Name</label>
+                <input type="text" id="teamName" required pattern="[A-Za-z0-9\\s]{3,20}" 
+                    title="Team name must be 3-20 characters long and can contain letters, numbers and spaces">
+            </div>
+            <h4>Team Members Information</h4>
+        `;
+
+        for (let i = 2; i <= 3; i++) {
+            const memberDiv = document.createElement('div');
+            memberDiv.className = 'team-member';
+            memberDiv.innerHTML = `
+                <h4>Team Member ${i}</h4>
+                <div class="form-group">
+                    <label for="member${i}Name">Full Name</label>
+                    <input type="text" id="member${i}Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="member${i}Mobile">Mobile Number</label>
+                    <input type="tel" id="member${i}Mobile" required pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number">
+                </div>
+                <div class="form-group">
+                    <label for="member${i}RegNo">Registration Number</label>
+                    <input type="text" id="member${i}RegNo" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <div class="radio-group">
+                        <input type="radio" id="member${i}Male" name="member${i}Gender" value="male" required>
+                        <label for="member${i}Male">Male</label>
+                        <input type="radio" id="member${i}Female" name="member${i}Gender" value="female">
+                        <label for="member${i}Female">Female</label>
+                    </div>
+                </div>
+            `;
+            teamFields.appendChild(memberDiv);
+        }
+    }
+
+    function getErrorMessage(input, fieldName, memberNumber) {
+        if (fieldName.includes('name')) {
+            return `Please enter a valid name for Team Member ${memberNumber}`;
+        } else if (fieldName.includes('mobile')) {
+            return `Please enter a valid 10-digit mobile number for Team Member ${memberNumber}`;
+        } else if (fieldName.includes('regNo')) {
+            return `Please enter a valid registration number for Team Member ${memberNumber}`;
+        }
+        return `Please enter a valid ${fieldName} for Team Member ${memberNumber}`;
+    }
+
+    window.addEventListener('scroll', () => {
+        const scrollPercentage = window.scrollY / (window.innerHeight * 0.6);
+        const opacity = Math.max(0, 1 - scrollPercentage);
+        requestAnimationFrame(() => {
+            document.querySelector('.gradient-overlay').style.opacity = opacity;
+        });
+    });
+
+    const sections = document.querySelectorAll('.section');
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                sectionObserver.unobserve(entry.target); // Only animate once
+            }
+        });
+    }, observerOptions);
+    
+    sections.forEach(section => {
+        sectionObserver.observe(section);
+    });
+
+    document.querySelectorAll('.learn-more-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const card = this.closest('.round-card-animated');
+            card.classList.toggle('active');
+        })
+    });
+
+    function testRegistrationForm() {
+        return {
+            basicInfo: () => {
+                console.log('Testing Basic Info...');
+                const nameInput = document.getElementById('name');
+                nameInput.value = 'Test User';
+                
+                if (nameInput.checkValidity()) {
+                    console.log('✅ Basic Info Test Passed');
+                    return true;
+                } else {
+                    console.error('❌ Basic Info Test Failed');
+                    return false;
+                }
+            },
+            
+            contactInfo: () => {
+                console.log('Testing Contact Info...');
+                const mobileInput = document.getElementById('mobile');
+                const emailInput = document.getElementById('email');
+                
+                mobileInput.value = '9876543210';
+                emailInput.value = 'test@example.com';
+                
+                const isValid = mobileInput.checkValidity() && emailInput.checkValidity();
+                console.log(isValid ? '✅ Contact Info Test Passed' : '❌ Contact Info Test Failed');
+                return isValid;
+            },
+            
+            teamRegistration: () => {
+                console.log('Testing Team Registration...');
+                document.getElementById('team').checked = true;
+                toggleTeamFields();
+                
+                const teamName = document.getElementById('teamName');
+                teamName.value = 'Test Team';
+                
+                const isValid = teamName.checkValidity();
+                console.log(isValid ? '✅ Team Registration Test Passed' : '❌ Team Registration Test Failed');
+                return isValid;
+            }
+        };
+    }
+
+    function testAPI() {
+        return {
+            registration: async () => {
+                console.log('Testing API Connection...');
+               try {
+                    const response = await fetch('http://localhost:3002/api/health', {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    const data = await response.json();
+                    console.log('API Response:', data);
+                    return response.ok;
+                } catch (error) {
+                    console.error('❌ API Connection Test Failed:', error);
+                    return false;
+                }
+            }
+        };
+    }
+
+    function runTests() {
+        console.group('🧪 Registration Form Tests');
+        
+        try {
+            // Test form validation
+            console.group('Form Validation Tests');
+            const formTests = testRegistrationForm();
+            formTests.basicInfo();
+            formTests.contactInfo();
+            formTests.teamRegistration();
+            console.groupEnd();
+            
+            // Test API connection
+            console.group('API Connection Test');
+            testAPI().registration()
+                .then(success => console.log(`API Connection: ${success ? '✅ Connected' : '❌ Failed'}`))
+                .catch(error => console.error('❌ API Test Error:', error));
+            console.groupEnd();
+            
+        } catch (error) {
+            console.error('❌ Test Suite Error:', error);
+        }
+        
+        console.groupEnd();
+    }
+
+    function validateForm() {
+        // Get all required inputs in the current step
+        const currentStep = document.querySelector('.form-step:not(.hidden)');
+        const requiredInputs = currentStep.querySelectorAll('input[required]');
+        
+        // Check each required input
+        for (const input of requiredInputs) {
+            if (!input.checkValidity()) {
+                // Show error message
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Please fill in all required fields correctly.',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+        }
+
+        // Special validation for photo upload
+        const photoInput = document.getElementById('passportPhoto');
+        if (photoInput && photoInput.files.length > 0) {
+            const file = photoInput.files[0];
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            
+            if (!validTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid File Type',
+                    text: 'Please upload a JPG, JPEG, or PNG file.',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+            
+            if (file.size > 2 * 1024 * 1024) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Too Large',
+                    text: 'Photo size should not exceed 2MB.',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    async function validateAndProceedToPayment() {
+        try {
+            // Basic form validation
+            if (!validateForm()) {
+                return;
+            }
+
+            // Get form data
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const mobile = document.getElementById('mobile').value;
+            const isLpu = document.getElementById('lpuYes').checked;
+            const participationType = document.querySelector('input[name="participationType"]:checked').value;
+            const needAccommodation = document.querySelector('input[name="needAccommodation"]:checked')?.value === 'yes';
+
+            // First register the user
+            const registrationData = {
+                name,
+                email,
+                mobile,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                isLpu,
+                regNo: document.getElementById('regNumber').value,
+                participationType,
+                needAccommodation
+            };
+
+            // Add team details if team registration
+            if (participationType === 'team') {
+                const teamName = document.getElementById('teamName').value;
+                const teamMembers = [];
+                for (let i = 2; i <= 3; i++) {
+                    teamMembers.push({
+                        name: document.getElementById(`member${i}Name`).value,
+                        mobile: document.getElementById(`member${i}Mobile`).value,
+                        regNo: document.getElementById(`member${i}RegNo`).value,
+                        gender: document.querySelector(`input[name="member${i}Gender"]:checked`).value
+                    });
+                }
+                registrationData.teamDetails = {
+                    teamName,
+                    members: teamMembers
+                };
+            }
+
+            // Register user
+            const registrationResponse = await fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(registrationData)
+            });
+
+            const registrationResult = await registrationResponse.json();
+            if (!registrationResult.success) {
+                throw new Error(registrationResult.error || 'Registration failed');
+            }
+
+            // Upload photo for non-LPU students
+            if (!isLpu) {
+                const photoFile = document.getElementById('passportPhoto').files[0];
+                if (!photoFile) {
+                    throw new Error('Please upload a photo');
+                }
+
+                // Validate file type
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                if (!validTypes.includes(photoFile.type)) {
+                    throw new Error('Invalid file type. Please upload a JPG, JPEG, or PNG file.');
+                }
+
+                // Validate file size (2MB limit)
+                if (photoFile.size > 2 * 1024 * 1024) {
+                    throw new Error('File size should not exceed 2MB.');
+                }
+
+                const photoFormData = new FormData();
+                photoFormData.append('photo', photoFile);
+                photoFormData.append('registrationId', registrationResult.registrationId);
+
+                const photoResponse = await fetch('/api/upload-photo', {
+                    method: 'POST',
+                    body: photoFormData
+                });
+
+                const photoResult = await photoResponse.json();
+                if (!photoResult.success) {
+                    throw new Error(photoResult.error || 'Photo upload failed');
+                }
+            }
+
+            // Create payment order
+            const orderResponse = await fetch('/api/create-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    isLpu,
+                    participationType,
+                    needAccommodation
+                })
+            });
+
+            const orderResult = await orderResponse.json();
+            if (!orderResult.success) {
+                throw new Error(orderResult.error || 'Failed to create payment order. Please try again.');
+            }
+
+            // Configure Razorpay options
+            const options = {
+                key: 'rzp_test_Kq5ykN0DHIRowD',
+                amount: orderResult.amount,
+                currency: orderResult.currency,
+                name: "Blog Battles",
+                description: `Registration for ${participationType} participation${needAccommodation ? ' with accommodation' : ''}`,
+                order_id: orderResult.id,
+                handler: async function (response) {
+                    try {
+                        // Verify payment
+                        const verificationResponse = await fetch('/api/verify-payment', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_signature: response.razorpay_signature,
+                                registrationId: registrationResult.registrationId
+                            })
+                        });
+
+                        const verificationResult = await verificationResponse.json();
+                        if (verificationResult.success) {
+                            // Replace the existing SweetAlert with the new success message
+                            const successHTML = `
+                                <div style="text-align: center; padding: 20px;">
+                                    <h2 style="color: #4CAF50; margin-bottom: 20px;">🎉 Registration Successful!</h2>
+                                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                                        <p style="font-size: 18px; margin-bottom: 15px;">
+                                            <i class="fas fa-check-circle" style="color: #4CAF50;"></i> 
+                                            Your registration for Type Till Sunrise has been confirmed.
+                                        </p>
+                                        <p style="font-size: 16px; margin-bottom: 10px;">
+                                            <i class="fas fa-whatsapp" style="color: #25D366;"></i> 
+                                            WhatsApp group link will be sent to your email shortly.
+                                        </p>
+                                        <p style="font-size: 16px; margin-bottom: 10px;">
+                                            <i class="fas fa-clock" style="color: #FF9800;"></i> 
+                                            Please report to the venue 1 hour before the event starts (by 5:00 PM).
+                                        </p>
+                                        <p style="font-size: 16px;">
+                                            <i class="fas fa-map-marker-alt" style="color: #F44336;"></i> 
+                                            Venue: LPU Campus, Block 32
+                                        </p>
+                                    </div>
+                                    <button onclick="window.location.href='index.html'" 
+                                            style="background: #2b2d42; color: white; border: none; 
+                                                   padding: 12px 30px; border-radius: 30px; 
+                                                   font-size: 16px; cursor: pointer;
+                                                   transition: all 0.3s ease;">
+                                        Return to Homepage
+                                    </button>
+                                </div>
+                            `;
+
+                            // Replace form with success message
+                            const formContainer = document.querySelector('.registration-form');
+                            formContainer.innerHTML = successHTML;
+                            
+                            // Scroll to the success message
+                            formContainer.scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                            throw new Error(verificationResult.error || 'Payment verification failed');
+                        }
+                    } catch (error) {
+                        console.error('Payment verification error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Payment Error',
+                            html: `
+                                <div style="text-align: left">
+                                    <p>We encountered an error while processing your payment.</p>
+                                    <p><strong>Error Details:</strong> ${error.message}</p>
+                                    <p>Please try again or contact support if the problem persists.</p>
+                                </div>
+                            `,
+                            confirmButtonText: 'Try Again'
+                        });
+                    }
+                },
+                prefill: {
+                    name: name,
+                    email: email,
+                    contact: mobile
+                },
+                theme: {
+                    color: '#dc2626'
+                }
+            };
+
+            // Check if Razorpay is loaded
+            if (typeof Razorpay === 'undefined') {
+                throw new Error('Razorpay is not loaded. Please refresh the page and try again.');
+            }
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+
+            rzp.on('payment.error', function (error) {
+                console.error('Razorpay payment error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Error',
+                    html: `
+                        <div style="text-align: left">
+                            <p>We encountered an error while processing your payment.</p>
+                            <p><strong>Error Details:</strong> ${error.error.description || 'Unknown error occurred'}</p>
+                            <p>Please try again or contact support if the problem persists.</p>
+                        </div>
+                    `,
+                    confirmButtonText: 'Try Again'
+                });
+            });
+        } catch (error) {
+            console.error('Registration error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Registration failed. Please try again.'
+            });
+        }
+    }
+
+</script>
 </body>
-
 </html>

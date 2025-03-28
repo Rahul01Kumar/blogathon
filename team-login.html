@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Login - Type Till Sunrise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a1f2c;
+            --accent: #dc2626;
+            --text: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Space Grotesk', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite;
+            opacity: 0.3;
+        }
+
+        .moon {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, #fff, #ffd700);
+            border-radius: 50%;
+            box-shadow: 0 0 50px #fff9;
+            animation: moonGlow 4s ease-in-out infinite;
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(45deg, #fff, transparent);
+            border-radius: 50%;
+            filter: drop-shadow(0 0 6px #fff);
+            animation: shoot 3s ease-out infinite;
+        }
+
+        @keyframes moonGlow {
+            0%, 100% { box-shadow: 0 0 50px #fff9; }
+            50% { box-shadow: 0 0 80px #fffa; }
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: (0, 0) rotate(45deg) scale(0);
+                opacity: 0;
+            }
+            1% {
+                opacity: 1;
+            }
+            100%{
+                transform: translate(-1000px, 1000px) rotate(45deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-header h1 {
+            color: var(--text);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .typewriter {
+            color: var(--accent);
+            font-size: 1.1rem;
+            height: 1.5em;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.2);
+            outline: none;
+        }
+
+        .form-group label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .form-group input:focus + label,
+        .form-group input:not(:placeholder-shown) + label {
+            top: 0;
+            left: 0.8rem;
+            font-size: 0.8rem;
+            padding: 0 0.5rem;
+            background: var(--primary);
+            border-radius: 4px;
+            color: var(--accent);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+        }
+
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .login-btn:active::after {
+            width: 200%;
+            height: 200%;
+        }
+
+        .error-message {
+            color: var(--accent);
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .success-message {
+            color: #01B981;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+            font-family: 'JetBrains Mono', monospace;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text);
+            transition: opacity 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            opacity: 1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes keyPress {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(2px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="moon"></div>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Team Login</h1>
+            <div class="typewriter" id="typewriter"></div>
+        </div>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <div class="form-group">
+                <input type="text" id="teamId" required placeholder=" ">
+                <label for="teamId">Team ID</label>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" required placeholder=" ">
+                <label for="password">Access Key</label>
+                <i class="fas  fa-eye password-toggle" id="togglePassword"></i>
+            </div>
+            <button type="submit" class="login-btn">Enter Battle Zone</button>
+            <p id="errorMessage" class="error-message">Invalid credentials</p>
+        </form>
+    </div>
+
+    <script>
+        // Create starry background
+        function createStars() {
+            const stars = document.querySelector('.stars');
+            for(let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+                stars.appendChild(star);
+            }
+        }
+
+        function createShootingStars() {
+            function createStar() {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+
+                shootingStar.style.top = Math.random() * (window.innerHeight * 0.3) + 'px';
+                shootingStar.style.right = '0';
+
+                const size = Math.random() * 3 + 2;
+                shootingStar.style.width = size + 'px';
+                shootingStar.style.height = size + 'px';
+
+                document.body.appendChild(shootingStar);
+
+                setTimeout(() => {
+                    shootingStar.remove();
+                }, 3000);
+            }
+
+            setInterval(createStar, 2000);
+            setInterval(createStar, 2500);
+            setInterval(createStar, 3000);
+
+            for(let i =0; i < 3; i++) {
+                setTimeout(createStar, i * 500);
+            }
+        }
+
+        // Typewriter effect
+        function typeWriter(text, element) {
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, 100);
+                }
+            }
+            type();
+        }
+
+        // Initialize effects
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            createShootingStars();
+            const typewriterElement = document.getElementById('typewriter');
+            typeWriter('Welcome to the Blogathon', typewriterElement);
+        });
+
+        // Key press animation
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keydown', () => {
+                input.style.animation = 'keyPress 0.15s ease';
+                setTimeout(() => input.style.animation = '', 150);
+            });
+        });
+
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.className = `fas ${type === 'password' ? 'fa-eye' : 'fa-eye-slash'} password-toggle`;
+        });
+
+        const TEAM_CREDENTIALS = [
+            { teamId: 'Mani', password: 'Mani@5674' },
+            { teamId: 'Rahul', password: 'Rahul@123' },
+            { teamId: 'Avneesh', password: 'Avneesh@123' }
+        ];
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const teamId = document.getElementById('teamId').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.createElement('p');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'Login successful! Redirecting..';
+
+            // Find team in credentials array
+            const team = TEAM_CREDENTIALS.find(t => t.teamId === teamId);
+
+            if (team && team.password === password) {
+                // Store team session data
+                localStorage.setItem('teamAuthenticated', 'true');
+                localStorage.setItem('currentTeamId', teamId);
+
+                errorMessage.style.display = 'none';
+
+                document.querySelector('.login-container').appendChild(successMessage);
+                successMessage.style.display = 'block';
+
+                localStorage.setItem('teamAuthenticated', 'true');
+                localStorage.setItem('currentTeamId', teamId);
+                
+                // Add timestamp for session management
+                localStorage.setItem('loginTime', new Date().getTime());
+
+                setTimeout(() => {
+                    window.location.href = 'team-dashboard.html';
+                }, 1500);
+            } else {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Invalid Team ID or Access Key';
+                
+                // Clear form
+                document.getElementById('loginForm').reset();
+                
+                // Hide error after 3 seconds
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+
+            return false;
+        }
+
+        // Check if already logged in
+        function checkSession() {
+            const isAuthenticated = localStorage.getItem('teamAuthenticated');
+            const loginTime = localStorage.getItem('loginTime');
+            
+            if (isAuthenticated && loginTime) {
+                // Check if session is still valid (24 hours)
+                const currentTime = new Date().getTime();
+                const sessionDuration = currentTime - parseInt(loginTime);
+                
+                if (sessionDuration < 24 * 60 * 60 * 1000) {
+                    window.location.href = 'team-dashboard.html';
+                } else {
+                    // Session expired
+                    localStorage.clear();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
